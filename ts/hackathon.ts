@@ -14,8 +14,11 @@ class Player {
             this.player = [];
         }
     }
+    
+  
     renderPlayer():void{
         let data = localStorage.getItem('player');
+       
         if(data){
             this.player = JSON.parse(data);
         }else{
@@ -27,27 +30,27 @@ class Player {
             this.player.forEach((player) => {
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
-                <tr>
-                <td>
-                   <div class="left">
-                    <div>
-                        <i onclick="dltPlayer(${player.id})" id="delete" class="fa-solid fa-x"></i>
-                        <i  id="crown" class="fa-solid fa-crown"></i>
-                    </div>
-                    <div>
-                        <span>${player.name}</span>
-                    </div>
-                   </div>
-                    
-                   <div class="right">
-                    <button class="opt"><i onclick="updatePlayer2(${player.id})" id="minus" class="fa-solid fa-minus"></i></button>
-                    <span>${player.score}</span>
-                    <button class="opt"><i onclick="updatePlayer1(${player.id})" id="add" class="fa-solid fa-add"></i></button>
-                   </div>
-                </td>
-                
-            </tr>
-                `;
+                                    <tr>
+                                        <td>
+                                            <div class="left">
+                                                <div>
+                                                    <i onclick="dltPlayer(${player.id})" id="delete" class="fa-solid fa-x"></i>
+                                                    <i  id="crown" class="fa-solid fa-crown"></i>
+                                                </div>
+                                                <div>
+                                                    <span>${player.name}</span>
+                                                </div>
+                                            </div>
+                                                
+                                            <div class="right">
+                                                <button class="opt"><i onclick="updatePlayer2(${player.id})" id="minus" class="fa-solid fa-minus"></i></button>
+                                                <span>${player.score}</span>
+                                                <button class="opt"><i onclick="updatePlayer1(${player.id})" id="add" class="fa-solid fa-add"></i></button>
+                                            </div>
+                                        </td>
+                                    
+                                    </tr>
+                                `;
                 tbody.appendChild(tr);
             });
         }
@@ -88,37 +91,55 @@ class Player {
             this.renderPlayer()
         }
     }
-    
-    
 }
 
 let a = new Player();
-a.player = [
-    {
-        id: Math.floor(Math.random() *1000),
-        name: 'a',
-        score: 10
-    }
-]
-
 a.renderPlayer();
 
 function createPlayer(){
     a.createPlayer();
     a.renderPlayer();
+    displayPer()
 }
 function dltPlayer(id:number){
     a.deletePlayer(id);
     a.renderPlayer();  
+    displayPer()
+    displayPoi()
 }
 function updatePlayer1(id:number){
     a.increaseScore(id);
     a.renderPlayer();
+    displayPoi()
 }
 function updatePlayer2(id:number){
     a.decreaseScore(id);
     a.renderPlayer();
+    displayPoi()
 }
+function displayPer():void{
+    let data:null|string = localStorage.getItem("player");
+    if(data){
+        let playerList = JSON.parse(data);
+        (<HTMLInputElement>document.getElementById("count")).innerHTML = playerList.length;
+    }else{
+        (<HTMLInputElement>document.getElementById("count")).innerHTML = ``;
+    }
+}
+displayPer();
+function displayPoi():void{
+    let sum = 0
+    let data:null|string|[] = localStorage.getItem("player");
+    if(data){
+        let playerInfo = JSON.parse(data);
+        for(let i = 0 ; i<playerInfo.length;i++){
+            sum+=a.player[i].score;
+        }
+        (<HTMLInputElement>document.getElementById("point")).innerHTML="";
+        (<HTMLInputElement>document.getElementById("point")).innerHTML=`${sum}`;
+    }
+}
+displayPoi();
 
 
 
